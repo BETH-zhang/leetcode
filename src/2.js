@@ -38,6 +38,7 @@ class LinkedList {
   // 打印链表元素的方法
   display(reverse) {
     let curNode = this.head
+    // console.log('curNode: ', curNode)
     let data = []
     if (curNode.val !== 'head') {
       if (!reverse) {
@@ -47,6 +48,7 @@ class LinkedList {
       }
     }
     while (!(curNode.next == null)) {
+      // console.log('----', data, curNode.next.val)
       if (!reverse) {
         data.push(curNode.next.val)
       } else {
@@ -55,41 +57,98 @@ class LinkedList {
       curNode = curNode.next
     }
     
-    return Number(data.join(''))
+    data.splice(0, 1)
+    return data
   }
 
   // 插入一个元素，找到当前元素，将当前元素的next赋值给新元素的next，将新元素赋值给当前元素的
   insert(newval, item) {
     const newNode = new ListNode(newval)
     var curNode = this.find(item)
-    newNode.next = curNode.next
-    curNode.next = newNode
+    if (curNode) {
+      newNode.next = curNode.next
+      curNode.next = newNode
+    }
   }
 
   // 辅助方法，遍历链表，查找指定的数据，如果找到该数据，就返回保存该数据的节点
   find(item) {
     let curNode = this.head
-    while (curNode.val !== item) {
+    // console.log(curNode.next)
+    while (curNode.next !== null) {
       curNode = curNode.next
     }
     return curNode
   }
 }
 
+
+function sum(num, num2) {
+  // console.log(num, num2)
+  const len1 = num.length;
+  const len2 = num2.length;
+  const len = (len1 < len2 ? len1 : len2) + 1
+  const data = len1 > len2 ? num.slice(0) : num2.slice(0)
+  const dataTmp = Array(len).fill(0)
+  
+  for (let i = 0; i < len; i++) {
+    if (num[len1 - 1 - i] && num2[len2 - 1 - i]) {
+      let s = Number(num[len1 - 1 - i]) + Number(num2[len2 - 1 - i])
+      console.log(0, s)
+      if (s > 9) {
+        dataTmp[dataTmp.length - 2 - i] = Number((s.toString()).slice(0, 1))
+        s = Number((s.toString()).slice(1))
+      }
+      data[data.length - 1 - i] = s + dataTmp[dataTmp.length - 1 - i]
+    } else if (dataTmp[dataTmp.length - 1 - i]) {
+      console.log(2)
+      data.splice(0, 0, dataTmp[dataTmp.length - 1 - i]) 
+    } else if (num[len1 - 1 - i] || num2[len2 - 1 - i]) {
+      console.log(3, num[len1 - 1 - i] || num2[len2 - 1 - i])
+      data[data.length - 1 - i] = num[len1 - 1 - i] || num2[len2 - 1 - i]
+    }
+  }
+
+  console.log(data)
+  return data
+}
+
+function init(str) {
+  const data = new LinkedList()
+  let tmp = 'head'
+  const ary = []
+  for (let i = str.length - 1; i >= 0; i--) {
+    data.insert(Number(str[i]), tmp)
+    tmp = Number(str[i])
+    ary.push(Number(str[i]))
+  }
+  data.insert(str[str.length - 1], null)
+  // console.log(str, data)
+  return {
+    data,
+    ary,
+  }
+}
+
 class Demo {
   constructor({ func, ...rest }) {
     // 手动插入链表节点
-    const data = new LinkedList()
-    data.insert(2, 'head');
-    data.insert(4, 2);
-    data.insert(3, 4);
-
-    const data1 = new LinkedList()
-    data1.insert(5, 'head');
-    data1.insert(6, 5);
-    data1.insert(4, 6);
+    // const data = init([1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1].join('')).data
+    // const data = init([1,0,0,0,0,0,0,0,0,0,0,0,0,0,1].join('')).data
+    // const data1 = init([4, 6, 5].join('')).data
+    // const data = init([2, 4, 3].join('')).data
+    // const data1 = init([5, 6, 4].join('')).data
+    // const data = init([5].join('')).data
+    // const data1 = init([5].join('')).data
+    // const data = init([0].join('')).data
+    // const data1 = init([2].join('')).data
+    // const data = init([9].join('')).data
+    // const data1 = init([9].join('')).data
+    const data = init([9, 8].join('')).data
+    const data1 = init([1].join('')).data
 
     // console.log(data.head.next)
+    // console.log('----', data.head.next.next)
     // console.log(data1.head.next)
 
     // 获取链表数字
@@ -99,22 +158,11 @@ class Demo {
     const num = data2.display('reverse');
     const num1 = data3.display('reverse');
 
-    const result = num + num1
-    // console.log(result)
-    this.init(result.toString())
-  }
-
-  init(str) {
-    const data = new LinkedList()
-    let tmp = 'head'
-    const ary = []
-    for (let i = str.length - 1; i >= 0; i--) {
-      data.insert(Number(str[i]), tmp)
-      tmp = Number(str[i])
-      ary.push(Number(str[i]))
-    }
-    const num = data.display()
-    console.log(data.head.next, ary)
+    const result = sum(num, num1)
+    // console.log('result: ', result)
+    const res = init(result)
+    console.log('res: ', res.data.head.next, res.ary)
+    return res
   }
 }
 
