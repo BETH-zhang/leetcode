@@ -22,6 +22,10 @@
  */
 
 var longestPalindrome = function(s) {
+  if (!s) {
+    return ''
+  }
+  
   let start = 0, end = 0;
   for (let i = 0; i < s.length; i++) {
     // aba
@@ -29,16 +33,17 @@ var longestPalindrome = function(s) {
     // abba
     const len2 = getMaximumLength(s, i, i + 1);
     const len = Math.max(len1, len2);
-    if (len > end - start) {
+    if (len > end - start + 1) { // 易错点，容易被后面的覆盖
       if (len1 > len2) {
         start = i - (len - 1) / 2;
-        end = i + len / 2;
+        end = i + (len - 1) / 2;
       } else {
         start = i - (len - 2) / 2;
         end = i + len / 2;
       }
     }
   }
+
   return s.substring(start, end + 1);
 };
 
@@ -51,5 +56,5 @@ var getMaximumLength = function(s, left, right) {
   return r - l - 1;
 }
 
-var val = longestPalindrome('abcdabacc')
+var val = longestPalindrome('babad')
 console.log(val)
