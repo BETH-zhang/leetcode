@@ -20,7 +20,6 @@
  * @param {string} s
  * @return {string}
  */
-var max
 
 var longestPalindrome = function(s) {
   let start = 0, end = 0;
