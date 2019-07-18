@@ -67,9 +67,8 @@ const remainingCovertRow = (rGC, rRC, numRows) => {
   if (!rGC) {
     row = rRC
   } else {
-    row = (numRows - rRC)
+    row = numRows - rRC - 2
   }
-  console.log(rGC, rRC, numRows, row)
   return row
 }
 
@@ -79,9 +78,9 @@ const getNewString = (s, numRows, oneGroupNum, rowLenBegin) => {
     const groupCount = Math.floor(i / oneGroupNum)
     const remainingCount = i % oneGroupNum
 
-    const rGC = Math.floor(groupCount / numRows)
+    const rGC = Math.floor(remainingCount / numRows)
     const rRC = remainingCount % numRows
-    const index = remainingCovertRow(groupCount, remainingCount, oneGroupNum)
+    const index = remainingCovertRow(rGC, rRC, numRows)
 
     let selectIndex = 0
     if (!remainingCount) {
@@ -90,17 +89,10 @@ const getNewString = (s, numRows, oneGroupNum, rowLenBegin) => {
       selectIndex = groupCount + rowLenBegin[index]
     } else {
       const n = !rGC && rRC < (index - 1) ? 0 : rGC && (index + (numRows - index) * 2 - 2 + 1) > rRC ? 2 : 1
-      selectIndex = groupCount + rowLenBegin[index] + n
-      console.log('2 4 2 3 ======', remainingCount, oneGroupNum, '///', index, s[i], n, selectIndex)
+      selectIndex = groupCount * 2 + rowLenBegin[index] + n - 1
     }
     ary[selectIndex] = s[i]
-    console.log(index, '---', i, selectIndex, s[i])
   })
-  /**
-   1   5
-   2 4 6
-   3
-   */
 
   return ary
 }
@@ -109,19 +101,16 @@ function convert(s, numRows) {
   const oneGroupNum = numRows * 2 - 2
   const groupCount = Math.floor(s.length / oneGroupNum)
   const remainingCount = s.length % oneGroupNum
-  console.log('oneGroupNum=', oneGroupNum, ' groupCount=', groupCount, ' remainingCount=', remainingCount)
 
   const rowLen = getEveryRowLength(numRows, groupCount, remainingCount)
-  console.log("rowLen: ", rowLen)
   const newS = getNewString(s, numRows, oneGroupNum, rowLen)
-  console.log("newS: ", newS)
 
   return newS.join('')
 }
 
 const example = convert('123456', 3)
 console.log(example === '152463')
-// const example1 = convert('PAYPALISHIRING', 3)
-// console.log(example1 === 'PAHNAPLSIIGYIR')
-// const example2 = convert('PAYPALISHIRING', 4)
-// console.log(example2 === 'PINALSIGYAHRPI')
+const example1 = convert('PAYPALISHIRING', 3)
+console.log(example1 === 'PAHNAPLSIIGYIR')
+const example2 = convert('PAYPALISHIRING', 4)
+console.log(example2 === 'PINALSIGYAHRPI')
