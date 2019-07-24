@@ -82,5 +82,6 @@ var myAtoi = function(str) {
   return Math.max(Math.min(data - 0, 2147483647), -2147483648)
 };
 
+// parseInt 和 data - 0 两种方法在运行的过程中，后者运行效率高很多，而空间占用率差不太多
 console.log('输入：', args.i)
 console.log('输出：', myAtoi(args.i.toString()))
