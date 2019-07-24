@@ -62,6 +62,41 @@ const getEveryRowLength = (numRows, groupCount, remainingCount) => {
   return rowLenBegin 
 }
 
+const remainingCovertRow = (rGC, rRC, numRows) => {
+  let row = 0
+  if (!rGC) {
+    row = rRC
+  } else {
+    row = numRows - rRC - 2
+  }
+  return row
+}
+
+const getNewString = (s, numRows, oneGroupNum, rowLenBegin) => {
+  const ary = Array(s.length).fill(null)
+  ary.forEach((item, i) => {
+    const groupCount = Math.floor(i / oneGroupNum)
+    const remainingCount = i % oneGroupNum
+
+    const rGC = Math.floor(remainingCount / numRows)
+    const rRC = remainingCount % numRows
+    const index = remainingCovertRow(rGC, rRC, numRows)
+
+    let selectIndex = 0
+    if (!remainingCount) {
+      selectIndex = groupCount
+    } else if (remainingCount === numRows - 1) {
+      selectIndex = groupCount + rowLenBegin[index]
+    } else {
+      const n = !rGC && rRC < (index - 1) ? 0 : rGC && (index + (numRows - index) * 2 - 2 + 1) > rRC ? 2 : 1
+      selectIndex = groupCount * 2 + rowLenBegin[index] + n - 1
+    }
+    ary[selectIndex] = s[i]
+  })
+
+  return ary
+}
+
 function convert(s, numRows) {
   if (s.length <= numRows) {
     return s
@@ -70,39 +105,18 @@ function convert(s, numRows) {
   const groupCount = Math.floor(s.length / oneGroupNum)
   const remainingCount = s.length % oneGroupNum
 
-  const rowLenBegin = getEveryRowLength(numRows, groupCount, remainingCount)
-  // 核心逻辑
-  const ary = Array(s.length).fill(null)
-  ary.forEach((item, i) => {
-    const groupCount = Math.floor(i / oneGroupNum)
-    const remainingCount = i % oneGroupNum
+  const rowLen = getEveryRowLength(numRows, groupCount, remainingCount)
+  const newS = getNewString(s, numRows, oneGroupNum, rowLen)
+  console.log(oneGroupNum, groupCount, remainingCount, rowLen, newS)
 
-    const rGC = Math.floor(remainingCount / numRows)
-    const rRC = remainingCount % numRows
-    const rowIndex = !rGC ? rRC : numRows - rRC - 2
-
-    let selectIndex = 0
-    if (!remainingCount) {
-      selectIndex = groupCount
-    } else if (remainingCount === numRows - 1) {
-      selectIndex = groupCount + rowLenBegin[rowIndex]
-    } else {
-      const n = !rGC && rRC < (rowIndex - 1) ? 0 : rGC && (rowIndex + (numRows - rowIndex) * 2 - 2 + 1) > rRC ? 2 : 1
-      selectIndex = groupCount * 2 + rowLenBegin[rowIndex] + n - 1
-    }
-    ary[selectIndex] = s[i]
-  })
-
-  return ary.join('')
+  return newS.join('')
 }
 
-const example00 = convert('A', 3)
-console.log(example00 === 'A')
 const example0 = convert('AB', 1)
-console.log(example0 === 'AB')
-const example = convert('123456', 3)
-console.log(example === '152463')
-const example1 = convert('PAYPALISHIRING', 3)
-console.log(example1 === 'PAHNAPLSIIGYIR')
-const example2 = convert('PAYPALISHIRING', 4)
-console.log(example2 === 'PINALSIGYAHRPI')
+console.log(example0)
+// const example = convert('123456', 3)
+// console.log(example === '152463')
+// const example1 = convert('PAYPALISHIRING', 3)
+// console.log(example1 === 'PAHNAPLSIIGYIR')
+// const example2 = convert('PAYPALISHIRING', 4)
+// console.log(example2 === 'PINALSIGYAHRPI')
