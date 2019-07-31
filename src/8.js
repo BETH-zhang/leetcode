@@ -18,6 +18,7 @@
 
 说明：
 
+5.32位整型数，区间判断
 假设我们的环境只能存储 32 位大小的有符号整数，那么其数值范围为 [−2 31,  2 31 − 1]。如果数值超过这个范围，qing返回  INT_MAX (231 − 1) 或 INT_MIN (−231) 。
 JavaScript仅支持32位整型数，也即从-2147483648到+2147483647之间的整数
 
@@ -62,23 +63,30 @@ const MAX_NUMBER = Math.pow(2, 31) - 1 // -2147483648
  * @param {string} str
  * @return {number}
  */
+// return Math.max(Math.min(parseInt(str) || 0, 2147483647), -2147483648)
+// 快，不要写子函数，牺牲代码可读性，使用一个 acsi转化 0 48  1 49  9 57 映射
 var myAtoi = function(str) {
-  // return Math.max(Math.min(parseInt(str) || 0, 2147483647), -2147483648)
-  str = str.replace(/(^\s*)|(\s*$)/g, ""); // 去掉字符串最前面的空格，中间的不用管
+  // 1.
+  str = str.replace(/(^\s*)|(\s*$)/g, "");
   var data="";
   for (var i=0; i < str.length; i++){
+    // 2.
+    //!/^[+-\d]{1}[0-9\.]+/
     if((str.charAt(i) === "-" || str.charAt(i) === "+") && i === 0){
       data = data.concat(str.charAt(i))
     } else if(/^\d+$/.test(str.charAt(i))){
       data = data.concat(str.charAt(i))
     } else {
-      break//直接跳出for循环
+      // 3.数字有效，没有数字无效
+      break
     };
   }
 
   console.log('data: ', data)
-  if(isNaN(data - 0)) return 0 // "+"/"-"这种情况,返回0
+  // 4.不能转成数字的，返回0
+  if(isNaN(data - 0)) return 0
 
+  // 5.利用Math的方法获取，当前值是否在范围区间内
   return Math.max(Math.min(data - 0, 2147483647), -2147483648)
 };
 
