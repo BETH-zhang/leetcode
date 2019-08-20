@@ -53,7 +53,7 @@ C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
 var intToRoman = function(num) {
   if (num < 1 && num > 3999) return 0
 
-  var cs = {
+  var roman = {
     1: 'I',
     5: 'V',
     10: 'X',
@@ -74,20 +74,20 @@ var intToRoman = function(num) {
   // 例如， 罗马数字 2 写做 II ，即为两个并列的 1。12 写做 XII ，即为 X + II 。 27 写做 XXVII , 即为 XX + V + II 。
   // M 1000
   // ['0000', '1000', '2000', '3000']
-  // var M1 = ['', cs.1000, cs.1000 + cs.1000, cs.1000 + cs.1000 + cs.1000]
+  // var M1 = ['', roman.1000, roman.1000 + roman.1000, roman.1000 + roman.1000 + roman.1000]
   var M = ['', 'M', 'MM', 'MMM']
   // C 100
   // D 500
   // ['000', '100', '200', '300', '400', '500', '600', '700', '800', '900']
-  // var C1 = ['', cs.100, cs.100 + cs.100, cs.100 + cs.100 + cs.100, cs.special.400, cs.500, cs.500 + cs.100, cs.500 + cs.100 + cs.100, cs.500 + cs.100 + cs.100 + cs.100, cs.special.900]
+  // var C1 = ['', roman.100, roman.100 + roman.100, roman.100 + roman.100 + roman.100, roman.special.400, roman.500, roman.500 + roman.100, roman.500 + roman.100 + roman.100, roman.500 + roman.100 + roman.100 + roman.100, roman.special.900]
   var C = ['', "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
   // X 10
   // L 50
-  // var X1 = ['', cs.10, cs.10 + cs.10, cs.10 + cs.10 + cs.10, cs.special.40, cs.50, cs.50 + cs.10, cs.50 + cs.10 + cs.10, cs.50 + cs.10 + cs.10 + cs.10, cs.special.90]
+  // var X1 = ['', roman.10, roman.10 + roman.10, roman.10 + roman.10 + roman.10, roman.special.40, roman.50, roman.50 + roman.10, roman.50 + roman.10 + roman.10, roman.50 + roman.10 + roman.10 + roman.10, roman.special.90]
   var X = ['', "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
   // I 1
   // V 5
-  // var I1 = ['', cs.1, cs.1 + cs.1, cs.1 + cs.1 + cs.1, cs.speical.4, cs.5, cs.5 + cs.1, cs.5 + cs.1 + cs.1, cs.5 + cs.1 + cs.1 + cs.1, cs.special.900]
+  // var I1 = ['', roman.1, roman.1 + roman.1, roman.1 + roman.1 + roman.1, roman.speical.4, roman.5, roman.5 + roman.1, roman.5 + roman.1 + roman.1, roman.5 + roman.1 + roman.1 + roman.1, roman.special.900]
   var I = ['', "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
  
   // 开始对当前数字进行分解，求余
