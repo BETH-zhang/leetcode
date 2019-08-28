@@ -22,6 +22,26 @@
  * 4 0,1  1,1
  * 5 0,1  1,2
  */
+
+
+/**
+ * 笛卡尔积
+ * join
+ */
+var cartesianProductOf = function() {
+  return Array.prototype.reduce.call(arguments, function(a, b) {
+  var ret = [];
+  a.forEach(function(a) {
+    b.forEach(function(b) {
+      console.log(a, b)
+      ret.push(a.concat([b]));
+    });
+  });
+  return ret;
+ }, [[]]);
+}
+
+
 /**
  * @param {string} digits
  * @return {string[]}
@@ -53,15 +73,18 @@ var letterCombinations = function(digits) {
     len[index] = digitLen[num]
     return digitAry[num]
   })
+  
+  return cartesianProductOf(...arr)
 
   var letterCombinations = []
 
-  // console.log(arr, size, len)
+  console.log(arr, size, len)
   for (var i = 0; i < size; i++) {
     // console.log('i----', i, arr)
     var letter = ''
     var treeSize = size
     var row = i
+
     for (var j = 0; j < len.length; j++) {
       var strLen = len[j]
       treeSize = treeSize / strLen
@@ -78,6 +101,6 @@ var letterCombinations = function(digits) {
   return letterCombinations
 };
 
-console.log(letterCombinations(2))
-console.log(letterCombinations(12))
-console.log(letterCombinations(234))
+// console.log(letterCombinations(2))
+console.log(letterCombinations(23))
+// console.log(letterCombinations(234))
