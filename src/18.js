@@ -9,38 +9,42 @@
  * @return {number[][]}
  */
 
-var getTargetAry = (target, newNums, targetIndex, direction, ary) => {
+var getTargetAry = (target, newNums, targetIndex, direction) => {
   var left1 = 0
   var left2 = targetIndex
   var right1 = targetIndex + 1
   var right2 = newNums.length - 1
-  var targetAry = ary
+  var targetAry = []
 
-  // 向中间走
   while (left1 < left2 || right1 < right2) {
     const a = newNums[left1]
     const b = newNums[left2]
     const c = newNums[right1]
     const d = newNums[right2]
     const sum = a + b + c + d
-    console.log(sum)
     if (sum === target) {
-      if (!targetAry.includes(`${a},${b},${c},${d}`)) {
-        targetAry.push(`${a},${b},${c},${d}`)
-      }
+      targetAry.push([a, b, c, d])
       // 可以向中间走
       if (direction === 'inner') {
         left1++
         right2--
-      } else {
+        // 可以向两边走
+      } else if (direction === 'outer') {
         left2--
         right1++
       }
-      // 可以向两边走
     } else if (sum > target) {
-      left2--
+      if (direction === 'inner') {
+        left1++
+      } else {
+        left2--
+      }
     } else if (sum < target) {
-      right1++
+      if (direction === 'inner') {
+        right2--
+      } else {
+        right1++
+      }
     }
   }
 
@@ -53,7 +57,6 @@ var fourSum = function(nums, target) {
     return sum === target ? nums : []
   } else {
     var newNums = nums.sort((a, b) => (a - b))
-    console.log(newNums)
     var targetIndex = 0
     var diffTarget = target
     for (var index = 0; index < newNums.length; index++) {
@@ -70,10 +73,22 @@ var fourSum = function(nums, target) {
       }
     }
 
-    const targetAry = getTargetAry(target, newNums, targetIndex, 'inner', [])
-    const targetAry1 = getTargetAry(target, newNums, targetIndex, 'outer', targetAry)
+    var targetAry1 = getTargetAry(target, newNums, targetIndex, 'inner')
+    var targetAry2 = getTargetAry(target, newNums, targetIndex, 'outer')
+    
+    var ary = targetAry1.concat(targetAry2)
+    var aryObj = {}
+    var targetAry = []
 
-    return targetAry1.map(item => item.split(','))
+    ary.forEach((item) => {
+      var key = item.join('')
+      if (!aryObj[key]) {
+        aryObj[key] = 1
+        targetAry.push(item)
+      }
+    })
+    
+    return targetAry
   }
 };
 
