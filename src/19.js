@@ -73,7 +73,7 @@ var removeNthFromEnd = function(head, n) {
         arr[i].next = arr[i + 1]
     }
 
-    // console.log(arr)
+    console.log(arr)
     return arr.length === 0 ? null : arr[0]
 }
 
