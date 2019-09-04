@@ -9,7 +9,7 @@
  * @return {number[][]}
  */
 
-var getTargetAry = (target, newNums, targetIndex, direction, ary) => {
+var getTargetAry = (target, newNums, targetIndex) => {
   var left1 = 0
   var left2 = targetIndex
   var right1 = targetIndex + 1
@@ -23,7 +23,6 @@ var getTargetAry = (target, newNums, targetIndex, direction, ary) => {
     const c = newNums[right1]
     const d = newNums[right2]
     const sum = a + b + c + d
-    console.log(sum)
     if (sum === target) {
       if (!targetAry.includes(`${a},${b},${c},${d}`)) {
         targetAry.push(`${a},${b},${c},${d}`)
@@ -70,10 +69,9 @@ var fourSum = function(nums, target) {
       }
     }
 
-    const targetAry = getTargetAry(target, newNums, targetIndex, 'inner', [])
-    const targetAry1 = getTargetAry(target, newNums, targetIndex, 'outer', targetAry)
+    const targetAry = getTargetAry(target, newNums, targetIndex)
 
-    return targetAry1.map(item => item.split(','))
+    return targetAry
   }
 };
 
