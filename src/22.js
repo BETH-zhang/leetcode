@@ -29,7 +29,12 @@ var ans;
 
 function dfs(s, left, right, n) {
   console.log(s, left, right, n)
-  if (left === n && right === n) {
+  // if (left === n && right === n) {
+  //   ans.push(s)
+  //   return
+  // }
+  if (left === n) {
+    s += Array(n * 2 - s.length).join('')
     ans.push(s)
     return
   }
