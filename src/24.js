@@ -131,5 +131,15 @@ var swapPairs = function(head) {
     return arr[0]
 };
 
+var swapPairs1 = function(head) {
+  if (!head) {
+    return null
+  }
+
+  // 递归的做法
+  // 遍历放到两个链表，然后再合并
+  // 0-0-0-0-0-0-0 保留2，5，  2链接4，5链接3，再4链接3
+}
+
 swapPairs(llist.head.next)
 
