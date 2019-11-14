@@ -4,52 +4,43 @@
  * [36] Valid Sudoku
  */
 
+/*
+ * @lc app=leetcode id=36 lang=javascript
+ *
+ * [36] Valid Sudoku
+ */
+
 // @lc code=start
 /**
  * @param {character[][]} board
  * @return {boolean}
  */
 var checkNumberValid = function(len) {
-  const rect = len / 3
-  const rows = {}
-  const colums = {}
-  const rects = {}
+  const rows = new Set()
+  const colums = new Set()
+  const rects = new Set()
   for (let i = 0; i < 9; i++) {
-    rows[i] = []
-    colums[i] = []
-    rects[i + 1] = []
+    rows[i] = ''
+    colums[i] = ''
+    rects[i] = ''
   }
 
   function getRectIndex(i, j) {
-    // 0, 0  1  
-    // 0, 3  2
-    // 0, 6  3
-    // 3, 0, 4
-    // 3, 3  5
-    // 3, 6  6
-    // 6, 0  7
-    // 6, 3  8
-    // 6, 6  9
-    return Math.floor(i / 3) * 3 + Math.floor(j / 3) + 1
+    // return Math.floor(i / 3) * 3 + Math.floor(j / 3)
+    return (~~(i / 3)) * 3 + ~~(j / 3)
   }
 
   return function(i, j, val) {
     const rectIndex = getRectIndex(i, j)
-    if (rows[i].includes(val)) {
+    if (rows[i].indexOf(val) > -1 || colums[j].indexOf(val) > -1) {
       return false
-    } else {
-      rows[i].push(val)
-    }
-    if (colums[j].includes(val)) {
-      return false
-    } else {
-      colums[j].push(val)
     }
     if (rects[rectIndex].includes(val)) {
       return false
-    } else {
-      rects[rectIndex].push(val)
     }
+    rows[i] += val
+    colums[j] += val
+    rects[rectIndex] += val
     return true
   }
 }
@@ -69,6 +60,9 @@ var isValidSudoku = function(board) {
     }
     return true
 };
+// @lc code=end
+
+
 // @lc code=end
 
 var data1 = [
