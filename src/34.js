@@ -4,6 +4,23 @@
  * [34] Find First and Last Position of Element in Sorted Array
  */
 
+var binarySearch = (arr, target) => {
+  var low = 0
+  var height = arr.length - 1
+  var mid;
+  while (low <= height) {
+    mid = ~~((low + height) / 2)
+    if (arr[mid] === target) {
+      return mid
+    } else if (arr[mid] < target) {
+      low = mid + 1
+    } else {
+      height = mid - 1
+    }
+  }
+  return -1
+}
+
 // @lc code=start
 /**
  * @param {number[]} nums
@@ -14,51 +31,27 @@ var searchRange = function(nums, target) {
     if (!nums || !nums.length) {
       return [-1, -1]
     }
-    let left = 0
-    let right = nums.length - 1
-    let mid = Math.floor((left + right) / 2)
-    let targetIndex = nums[mid] === target ? mid : null
-    let count = 0
-    while(left !== right && targetIndex === null && count < nums.length) {
-      count++
-      if (nums[mid] < target) {
-        left = mid
-        mid = Math.floor((left + right) / 2)
-        console.log('<<', left, mid, right)
-      } else if (nums[mid] > target) {
-        right = mid
-        mid = Math.floor((left + right) / 2)
-        console.log('>>', left, mid, right)
-      } else if (nums[mid] === target) {
-        targetIndex = mid
-      }
-      if (nums[left] === target) {
-        console.log('left', left)
-        targetIndex = left
-      }
-      if (nums[right] === target) {
-        console.log('right', right)
-        targetIndex = right
-      }
-    }
-    console.log('targetIndex: ', targetIndex)
+    const targetIndex = binarySearch(nums, target)
+    // console.log('targetIndex: ', targetIndex)
     if (targetIndex !== null) {
-      let leftStop = 0
-      let rightStop = 0
-      left = targetIndex
-      right = targetIndex
-      while(!rightStop || !leftStop) {
-        console.log(targetIndex, left)
-        if (left > 0 && nums[left - 1] === target) {
-          console.log('left - 1')
-          left = left - 1
+      let left = targetIndex
+      let right = targetIndex
+      let leftStop = false
+      let rightStop = false
+      let count = 0
+      while ((!leftStop || !rightStop) && count < 10) {
+        count++
+        const leftIndex = binarySearch(nums.slice(0, left), target)
+        // console.log('left--', left, leftIndex)
+        if (leftIndex > -1) {
+          left = leftIndex
         } else {
           leftStop = true
         }
-        console.log(targetIndex, right)
-        if (right < nums.length - 1 && nums[right + 1] === target) {
-          console.log('right + 1')
-          right = right + 1
+        const rightIndex = binarySearch(nums.slice(right + 1), target)
+        // console.log('right--', right, rightIndex)
+        if (rightIndex > -1) {
+          right = nums.slice(0, right + 1).length + rightIndex
         } else {
           rightStop = true
         }
@@ -74,6 +67,7 @@ var searchRange = function(nums, target) {
 // console.log(searchRange([1], 1))
 // console.log(searchRange([1,3], 1))
 // console.log(searchRange([1,4], 4))
-console.log(searchRange([1,2,3], 1))
+// console.log(searchRange([1,2,3], 1))
+console.log(searchRange([2, 2], 2))
 // @lc code=end
 
