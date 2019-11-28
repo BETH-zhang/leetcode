@@ -39,6 +39,7 @@ var combinationSum2 = function(candidates, target) {
   }
 
   results = []
+  resultObj = {}
   cycleCandidates(candidates, target, [])
   return results
 };
