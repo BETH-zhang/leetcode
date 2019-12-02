@@ -129,29 +129,28 @@ var gridConnection1 = (p0, p1, ss) => {
   const dy = p1[1] - p0[1]
 
   if (dx && dy) {
-    // console.log(a, b)
-    // console.log(dx, dy)
     const step = Math.max(dx, dy)
-    // console.log('step: ', step)
-    const points = Array(step - 1).fill(0).map((item, index) => {
-      // console.log(index, p0[0] + index)
-      if (dx >= dy) {
-        const x = p0[0] + index + 1
-        const y = Math.round(a * x + b)
-        return [x, y]
-      } else {
-        const y = p0[1] + index + 1
-        const x = Math.round((y - b) / a)
-        return [x, y]
-      }
-    })
-    return points
-  } else if (dx) {
+    if (step > 2) {
+      const points = Array(step).fill(0).map((item, index) => {
+        if (dx >= dy) {
+          const x = p0[0] + index
+          const y = Math.round(a * x + b)
+          return [x, y]
+        } else {
+          const y = p0[1] + index
+          const x = Math.round((y - b) / a)
+          return [x, y]
+        }
+      })
+      return points
+    }
+    return [p1]
+  } else if (dx > 0 && dy === 0) {
     const points = Array(dx).fill(0).map((item, index) => {
       return [p0[0] + index + 1, p0[1]]
     })
     return points
-  } else if (dy) {
+  } else if (dy > 0 && dx === 0) {
     const points = Array(dy).fill(0).map((item, index) => {
       return [p0[0], p0[1] + index + 1]
     })
