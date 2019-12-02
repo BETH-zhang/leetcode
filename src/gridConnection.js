@@ -111,15 +111,10 @@ var gridConnection = (point0, point1) => {
   return []
 }
 
-// console.log(gridConnection([2, 1], [3, 2]))
-// console.log(gridConnection([1, 1], [3, 2]))
-// console.log(gridConnection([1, 1], [2, 5]))
-// console.log(gridConnection([3, 2], [5, 5]))
-// console.log(gridConnection([1, 1], [4, 3]))
-// console.log(gridConnection([1, 1], [5, 5]))
-// console.log(gridConnection([5, 5], [9, 11]))
+var gridConnection1 = (p0, p1, ss) => {
+  console.log('input: *******', `${p0} `, ` ${p1}`)
 
-var gridConnection1 = (p0, p1) => {
+  console.log(`---------t ${ss.join('  ')}`)
   // y = ax + b
   // b = y - ax
   // y0 - a * x0 = y1 - a * x1
@@ -129,18 +124,51 @@ var gridConnection1 = (p0, p1) => {
   const a = (p1[1] - p0[1]) / (p1[0] - p0[0])
   const b = p0[1] - a * p0[0]
   // y = a * x + b
+  // x = (y - b) / a
   const dx = p1[0] - p0[0]
   const dy = p1[1] - p0[1]
-  console.log(a, b)
-  console.log(dx, dy)
-  const step = Math.max(dx, dy)
-  console.log('step: ', step)
-  const points = Array(step).fill(0).forEach((item, index) => {
-    console.log(index, p0[0] + index)
-    const x = p0[0] + index + 1
-    const y = Math.round(a * x + b)
-  })
-  return points
+
+  if (dx && dy) {
+    // console.log(a, b)
+    // console.log(dx, dy)
+    const step = Math.max(dx, dy)
+    // console.log('step: ', step)
+    const points = Array(step - 1).fill(0).map((item, index) => {
+      // console.log(index, p0[0] + index)
+      if (dx >= dy) {
+        const x = p0[0] + index + 1
+        const y = Math.round(a * x + b)
+        return [x, y]
+      } else {
+        const y = p0[1] + index + 1
+        const x = Math.round((y - b) / a)
+        return [x, y]
+      }
+    })
+    return points
+  } else if (dx) {
+    const points = Array(dx).fill(0).map((item, index) => {
+      return [p0[0] + index + 1, p0[1]]
+    })
+    return points
+  } else if (dy) {
+    const points = Array(dy).fill(0).map((item, index) => {
+      return [p0[0], p0[1] + index + 1]
+    })
+    return points
+  }
 }
 
-gridConnection1([1, 1], [8, 4])
+console.log(gridConnection1([1, 1], [2, 2], []))
+
+console.log(gridConnection1([1, 1], [4, 2], [[2, 1], [3, 1]]))
+
+console.log(gridConnection1([1, 1], [2, 4], [[2, 2], [2, 3]]))
+console.log(gridConnection1([1, 1], [4, 3], [[2, 2], [3, 2]]))
+console.log(gridConnection1([1, 1], [3, 4], [[2, 2], [2, 3]]))
+console.log(gridConnection1([1, 1], [6, 4], [[2, 2], [3, 2], [4, 3], [4, 4]]))
+console.log(gridConnection1([1, 1], [7, 4], [[2, 2], [3, 2], [4, 2], [5, 3], [6, 3]]))
+console.log(gridConnection1([1, 1], [4, 8], [[2, 2], [2, 3], [2, 4], [3, 5], [3, 6], [3, 7]]))
+console.log(gridConnection1([1, 1], [5, 5], [[2, 2], [3, 3], [4, 4]]))
+console.log(gridConnection1([1, 1], [5, 1], [[2, 1], [3, 1], [4, 1]]))
+console.log(gridConnection1([1, 1], [1, 6], [[1, 2], [1, 3], [1, 4], [1, 5]]))
