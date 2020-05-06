@@ -10,8 +10,8 @@ new Promise(setTimeout(10~100ms resolve()))
 可以几个几个的同时传输，然后有一个传输成功之后，立马补上后面的
  */
 
-// 分批异步操作
-Promise.all1 = function(promises, singleCount = 1) {
+// 分批异步事件执行
+const asyncConcurrent = function(promises, singleCount = 1) {
   console.log(promises, singleCount)
   let arr = []
   let success = 0; // 成功的个数
@@ -35,11 +35,11 @@ Promise.all1 = function(promises, singleCount = 1) {
     if (success + failure === promises.length) {
       pResolve(arr)
     } else {
-      fullThead(index)
+      concurrent(index)
     }
   }
 
-  function fullThead(i) {
+  function concurrent(i) {
     if (count < singleCount && index < promises.length) {
       console.log(`第${i}个线程: 开始`)
       promises[i].then(data => {
@@ -60,12 +60,19 @@ Promise.all1 = function(promises, singleCount = 1) {
     pResolve = resolve
     pReject = reject
     for (let i = 0; i < singleCount; i++) {
-      fullThead(i)
+      concurrent(i)
     }
   })
 }
 
-Promise.all1([
+function test() {
+//   300个「文件」
+// 每个「文件」传输时间：10~100ms
+  
+}
+
+console.time('1111')
+asyncConcurrent([
   new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve('success0')
@@ -94,8 +101,8 @@ Promise.all1([
   }),
   new Promise((resolve, reject) => {
     setTimeout(() => {
-      // resolve('success5')
-      reject('fail5')
+      resolve('success5')
+      // reject('fail5')
     }, 6000)
   }).then((data, error) => {
     console.log('~~~~~~~ then', data, error)
@@ -115,6 +122,9 @@ Promise.all1([
 ], 3).then((res, error) => {
   console.log('data-all: ', res)
   console.log('data-error: ', error)
+  console.timeEnd('1111')
 }).catch((error) => {
   console.log('data-all-error: ', error)
 })
+
+// 使用 do ... while ... 来实现
