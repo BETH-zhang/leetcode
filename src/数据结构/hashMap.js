@@ -1,5 +1,19 @@
 const LinkedList = require('./LinkedList.js')
 
+console.log('LinkedList')
+/**
+ * 如何让冲突的可能性变小，就是让计算出的散列值尽可能的不重复
+ * 
+ * 首先用一个hash变量存储一个质数（智能被1和自身整除的数），将hash与33相乘并加上当前迭代得到ascii码相加，最后对1013取余
+ */
+const djb2HashCode = (key) => {
+  let hash = 5831
+  for (let i = 0; i < key.length; i++) {
+    hash = hash * 33 + key.charCodeAt(i)
+  }
+  return hash % 1013
+}
+
 /**
  * 循环遍历
  * 
@@ -37,7 +51,7 @@ class HashMap {
 
   // 同样的，我们想要得到一个值，只要通过散列函数计算出位置就可以直接拿到，无需循环
   get(key) {
-    return this.list[this.loseloseHashCode(key)]
+    return this.list[this.loseloseHashCode(key)] || undefined
   }
 
   // 这里要注意一下，我们的散列表是松散结构，也就是说散列表内的元素并不是每一个下标index都一定是有值
@@ -112,21 +126,21 @@ class ValuePair {
   toString() {
     return `{${this.key}-${this.value}}`
   }
-  
 }
 
  // 创建分离链接法下的hashMap
-class SeparateHashMap {
+class LinkedHashMap {
   constructor() {
     this.list = []
   }
 
   loseloseHashCode(key) {
-    let hash = 0
-    for (let i = 0; i < key.length; i++) {
-      hash += key.charCodeAt(i)
-    }
-    return hash % 37
+    return djb2HashCode(key)
+    // let hash = 0
+    // for (let i = 0; i < key.length; i++) {
+    //   hash += key.charCodeAt(i)
+    // }
+    // return hash % 37
   }
 
   put(key, value) {
@@ -144,10 +158,10 @@ class SeparateHashMap {
   get(key) {
     const position = this.loseloseHashCode(key)
     // 如果这个位置不是undefined，那么说明存在链表
-    if (this.list[position] !== undefined) {
+    if (this.list[position]) {
       // 我们要拿到current，也就是链表中的第一个元素进行链表中的遍历
       let current = this.list[position].getHead()
-      // 如果current.next不为null说明还有下一个
+      // 如果current.next不为undefined说明还有下一个
       while (current.next) {
         // 如果要查找的key是当前链表元素的key，就返回该链表节点的value
         // 这里需要注意，current.element = ValuePair
@@ -169,7 +183,7 @@ class SeparateHashMap {
   remove(key) {
     const position = this.loseloseHashCode(key)
 
-    if (this.list[position] !== undefined) {
+    if (this.list[position]) {
       let current = this.list[position].getHead()
       while(current.next) {
         if (current.element.key === key) {
@@ -202,7 +216,7 @@ class SeparateHashMap {
   }
 }
 
-// var separateHash = new SeparateHashMap();
+// var separateHash = new LinkedHashMap();
 // separateHash.put("Gandalf",'www.Gandalf.com');//19-Gandalf
 // separateHash.put("John",'www.John.com');//29-John
 // separateHash.put("Tyrion",'www.Tyrion.com');//16-Tyrion
@@ -238,11 +252,12 @@ class LinearHashMap {
   }
 
   loseloseHashCode(key) {
-    let hash = 0
-    for (let i = 0; i < key.length; i++) {
-      hash += key.charCodeAt(i)
-    }
-    return hash % 37
+    return djb2HashCode(key)
+    // let hash = 0
+    // for (let i = 0; i < key.length; i++) {
+    //   hash += key.charCodeAt(i)
+    // }
+    // return hash % 37
   }
   
   put(key, value) {
@@ -263,7 +278,7 @@ class LinearHashMap {
   get(key) {
     let position = this.loseloseHashCode(key)
 
-    if (this.list[position] !== undefined) {
+    if (this.list[position]) {
       if (this.list[position].key === key) {
         return this.list[position].value
       } else {
@@ -276,12 +291,12 @@ class LinearHashMap {
         }
       }
     }
-    return undefined
+    return null
   }
 
   remove(key) {
     let position = this.loseloseHashCode(key)
-    if (this.list[position] !== undefined) {
+    if (this.list[position]) {
       if (this.list[position].key === key) {
         this.list[position] = undefined
       } else {
@@ -294,7 +309,7 @@ class LinearHashMap {
         }
       }
     }
-    return undefined
+    return null
   }
 
   print() {
@@ -306,34 +321,23 @@ class LinearHashMap {
   }
 }
 
-var linearHash = new LinearHashMap();
-linearHash.put("Gandalf",'www.Gandalf.com');//19-Gandalf
-linearHash.put("John",'www.John.com');//29-John
-linearHash.put("Tyrion",'www.Tyrion.com');//16-Tyrion
-linearHash.put("Aaron",'www.Aaron.com');//16-Aaron
-linearHash.put("Donnie",'www.Donnie.com');//13-Donnie
-linearHash.put("Ana",'www.Ana.com');//13-Ana
-linearHash.put("Jonathan",'www.Jonathan.com');//5-Jonathan
-linearHash.put("Jamie",'www.Jamie.com');//5-Jamie
-linearHash.put("Sue",'www.Sue.com');//5-Sue
-linearHash.put("Mindy",'www.Mindy.com');//32-Mindy
-linearHash.put("Paul",'www.Paul.com');//32-Paul
-linearHash.put("Nathan",'www.Nathan.com');//10-Nathan
+// var linearHash = new LinearHashMap();
+// linearHash.put("Gandalf",'www.Gandalf.com');//19-Gandalf
+// linearHash.put("John",'www.John.com');//29-John
+// linearHash.put("Tyrion",'www.Tyrion.com');//16-Tyrion
+// linearHash.put("Aaron",'www.Aaron.com');//16-Aaron
+// linearHash.put("Donnie",'www.Donnie.com');//13-Donnie
+// linearHash.put("Ana",'www.Ana.com');//13-Ana
+// linearHash.put("Jonathan",'www.Jonathan.com');//5-Jonathan
+// linearHash.put("Jamie",'www.Jamie.com');//5-Jamie
+// linearHash.put("Sue",'www.Sue.com');//5-Sue
+// linearHash.put("Mindy",'www.Mindy.com');//32-Mindy
+// linearHash.put("Paul",'www.Paul.com');//32-Paul
+// linearHash.put("Nathan",'www.Nathan.com');//10-Nathan
 
-linearHash.print();
-console.log(linearHash.get("Paul"));
-console.log(linearHash.remove("Mindy"));
-linearHash.print();
+// linearHash.print();
+// console.log(linearHash.get("Paul"));
+// console.log(linearHash.remove("Mindy"));
+// linearHash.print();
 
-/**
- * 如何让冲突的可能性变小，就是让计算出的散列值尽可能的不重复
- * 
- * 首先用一个hash变量存储一个质数（智能被1和自身整除的数），将hash与33相乘并加上当前迭代得到ascii码相加，最后对1013取余
- */
-const djb2HashCode = (key) => {
-  let hash = 5831
-  for (let i = 0; i < key.length; i++) {
-    hash = hash * 33 + key.charCodeAt(i)
-  }
-  return hash % 1013
-}
+module.exports = LinearHashMap
