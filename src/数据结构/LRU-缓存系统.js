@@ -69,6 +69,7 @@ class DoubleLinkedList {
       node.setNext(oldFirst)
       this.first = node
     }
+
     this.length++
   }
 
@@ -108,6 +109,7 @@ class DoubleLinkedList {
     }
 
     node.getPrev().setNext(node.getNext())
+    
     node.setPrev(null)
     node.setNext(this.first)
     this.first = node
