@@ -201,17 +201,16 @@ cache.put("b", "b");
 cache.put("c", "c");
 cache.put("d", "d");
 cache.put("e", "e");
+cache.put('f', 'f')
 
 cache.get('3')
 
-cache.get('a')
+cache.get('c')
 
-cache.put('f', 'f')
+// cache.put('f', 'f')
 
 cache.get('b')
 
-cache.get('d')
-
-cache.put('c', 'cc')
+// cache.put('c', 'cc')
 
 cache.toString()
